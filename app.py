@@ -5,79 +5,26 @@ import numpy as np
 # ──────────────────────────────────────────────────────────────
 # Page setup
 # ──────────────────────────────────────────────────────────────
-st.set_page_config(page_title="IFRS 16 — Lease Accounting Made Simple", layout="centered")
+st.set_page_config(page_title="IFRS 16 — Lease Accounting Made Simple", layout="wide")
 st.title("📘 IFRS 16 — Lease Accounting Made Simple")
 st.caption("An interactive teaching resource explaining the accounting for leases under IFRS 16 using a clear, stage-by-stage approach.")
 
 # ──────────────────────────────────────────────────────────────
-# CONTENTS PANEL
+# Sidebar Contents Menu — Clickable Navigation
 # ──────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.header("📑 Contents")
-    st.markdown(
-        """
-1. Introduction  
-2. Scenario  
-3. Calculating the Present Value  
-4. The Payment Schedule  
-5. How to Update the Financial Statements  
-        """
-    )
-
-# ──────────────────────────────────────────────────────────────
-# 1. Introduction
-# ──────────────────────────────────────────────────────────────
-with st.expander("1️⃣ Introduction", expanded=True):
-    st.markdown(
-        r"""
-Leases are a common way for businesses to access assets such as property, machinery, or vehicles **without purchasing them outright**. Instead, a lessee pays regular instalments to use the asset for an agreed period.
-
-Under **IFRS 16 – Leases**, companies must record most leases **on the balance sheet**, recognising:
-- a **Right-of-Use (ROU) asset**, representing the right to use the asset; and
-- a **Lease liability**, representing the obligation to make future payments.
-
-This approach replaced older rules (IAS 17), where many leases were treated as off‑balance‑sheet operating expenses. IFRS 16 therefore improves **transparency** and **comparability** across companies by reflecting the economic reality of leases.
-
-The impact is seen across the main financial statements:
-- **Statement of Financial Position:** records the ROU asset and the lease liability.  
-- **Profit or Loss:** rent expense is replaced by **depreciation** and **interest expense**.  
-- **Cash Flow Statement:** payments are split between **principal** (financing) and **interest** (policy choice under IAS 7).
-        """
-    )
+menu = st.sidebar.radio(
+    "📑 Contents",
+    [
+        "1️⃣ Introduction",
+        "2️⃣ Scenario",
+        "3️⃣ Calculating the Present Value",
+        "4️⃣ The Payment Schedule",
+        "5️⃣ Updating the Financial Statements"
+    ]
+)
 
 # ──────────────────────────────────────────────────────────────
-# 2. Scenario (based on ACCA source)
-# ──────────────────────────────────────────────────────────────
-with st.expander("2️⃣ Scenario (based on ACCA example)", expanded=True):
-    st.markdown(
-        r"""
-A company leases a property for **20 years**, paying **£80,000 per year in arrears** (end of year).  
-The **incremental borrowing rate** is **6 %**, and the company incurs **£25,000** in initial direct costs.
-
-This example is adapted from the ACCA article *“IFRS 16 Leases”* and demonstrates how the lease liability and right‑of‑use asset are recognised and measured.
-        """
-    )
-
-# ──────────────────────────────────────────────────────────────
-# 3. Calculating the Present Value
-# ──────────────────────────────────────────────────────────────
-with st.expander("3️⃣ Calculating the Present Value", expanded=True):
-    st.markdown(
-        r"""
-To measure the **lease liability**, the company calculates the **present value (PV)** of the future lease payments, discounted at 6 % (the incremental borrowing rate):
-
-\[
-PV = \sum_{t=1}^{20} \frac{80{,}000}{(1.06)^t} = £917{,}594
-\]
-
-Adding the **initial direct costs (£25,000)** gives a **Right‑of‑Use (ROU) asset** of **£942,594**.
-
-💡 *If payments were made at the **beginning** of each year (in advance), the PV would be slightly higher because each payment is discounted for one fewer period.*
-        """
-    )
-
-# ──────────────────────────────────────────────────────────────
-# 4. The Payment Schedule
+# Static dataset (for reference)
 # ──────────────────────────────────────────────────────────────
 schedule_data = [
     (1, 917_594, 55_056, 80_000, 892_649),
@@ -105,10 +52,69 @@ columns = ["Year", "Opening liability", "Interest (6%)", "Payment", "Closing lia
 df = pd.DataFrame(schedule_data, columns=columns)
 df["Principal repaid"] = df["Payment"] - df["Interest (6%)"]
 
-with st.expander("4️⃣ The Payment Schedule", expanded=True):
+# ──────────────────────────────────────────────────────────────
+# 1. Introduction
+# ──────────────────────────────────────────────────────────────
+if menu == "1️⃣ Introduction":
+    st.header("1️⃣ Introduction")
     st.markdown(
         r"""
-The schedule shows how each year’s **interest** and **principal repayment** change the lease liability:
+Leases allow a business to use assets such as property, machinery, or vehicles **without purchasing them outright**. Under **IFRS 16 – Leases**, most leases are brought **on-balance-sheet**, ensuring greater transparency.
+
+Companies must recognise:
+- A **Right-of-Use (ROU) asset** – representing the right to use the asset.  
+- A **Lease liability** – representing the obligation to make lease payments.
+
+This replaces the previous off-balance-sheet treatment under IAS 17. The effect is:
+- **Balance Sheet:** records both asset and liability.  
+- **Profit or Loss:** rent expense is replaced by depreciation + interest.  
+- **Cash Flow:** split between interest and principal (usually financing).
+
+Accounting for leases under IFRS 16 ensures financial statements reflect the **economic substance** of leasing arrangements rather than their legal form.
+        """
+    )
+
+# ──────────────────────────────────────────────────────────────
+# 2. Scenario
+# ──────────────────────────────────────────────────────────────
+elif menu == "2️⃣ Scenario":
+    st.header("2️⃣ Scenario (based on ACCA example)")
+    st.markdown(
+        r"""
+A company leases a property for **20 years**, paying **£80,000 per year in arrears** (end of year).  
+The **incremental borrowing rate** is **6 %**, and the company incurs **£25,000** in initial direct costs.
+
+This example, adapted from the ACCA article *“IFRS 16 Leases”*, demonstrates the recognition of both the **lease liability** and **right-of-use asset**.
+        """
+    )
+
+# ──────────────────────────────────────────────────────────────
+# 3. Calculating the Present Value
+# ──────────────────────────────────────────────────────────────
+elif menu == "3️⃣ Calculating the Present Value":
+    st.header("3️⃣ Calculating the Present Value")
+    st.markdown(
+        r"""
+To measure the **lease liability**, calculate the **present value (PV)** of the future lease payments, discounted at 6 %:
+
+\[
+PV = \sum_{t=1}^{20} \frac{80{,}000}{(1.06)^t} = £917{,}594
+\]
+
+Adding **initial direct costs (£25,000)** gives a **Right-of-Use (ROU) asset** of **£942,594**.
+
+💡 *If payments were made at the **start** of each year, the PV would be slightly higher because each payment is discounted for one fewer period.*
+        """
+    )
+
+# ──────────────────────────────────────────────────────────────
+# 4. The Payment Schedule
+# ──────────────────────────────────────────────────────────────
+elif menu == "4️⃣ The Payment Schedule":
+    st.header("4️⃣ The Payment Schedule")
+    st.markdown(
+        r"""
+Each year the lease liability changes as payments are made. The pattern below is based on end-of-year payments (arrears):
 
 - **Interest (6 %)** = Opening × 6 %  
 - **Principal repaid** = Payment − Interest  
@@ -126,60 +132,59 @@ Example: Year 1 interest £55,056 (6 % of £917,594). Payment £80,000 ⇒ princ
     }), use_container_width=True)
 
 # ──────────────────────────────────────────────────────────────
-# 5. How to Update the Financial Statements
+# 5. Updating the Financial Statements
 # ──────────────────────────────────────────────────────────────
-with st.expander("5️⃣ How to Update the Financial Statements", expanded=True):
+elif menu == "5️⃣ Updating the Financial Statements":
+    st.header("5️⃣ Updating the Financial Statements")
     y1_interest = df.loc[df["Year"] == 1, "Interest (6%)"].iloc[0]
     y1_principal = df.loc[df["Year"] == 1, "Principal repaid"].iloc[0]
     depreciation = 47_130
 
     st.markdown(
         r"""
-Under **IFRS 16**, the financial statements reflect both the asset and liability sides of the lease:
+Under **IFRS 16**, updates to the accounts are made through **journal entries**, which record transactions in the general ledger using nominal codes.
 
-### 🧾 Statement of Profit or Loss
-- **Depreciation expense** on the ROU asset: £47,130 (straight-line over 20 years).  
-- **Interest expense** on the lease liability: £55,056 (6 % of opening balance).  
+### Example of nominal codes:
+| Code | Account Name | Type |
+|------|---------------|------|
+| 1150 | Right-of-Use Asset | Non-current asset |
+| 2100 | Lease Liability | Non-current liability |
+| 7000 | Depreciation Expense | Expense (P&L) |
+| 7500 | Interest Expense | Finance cost (P&L) |
+| 1000 | Bank | Asset |
 
-These replace the old *lease rental expense*. Total expense is higher in early years but lower later (front-loaded effect).
+### Year 0 — Lease Commencement
+```text
+Dr 1150 Right-of-Use Asset........£942,594
+    Cr 2100 Lease Liability................£917,594
+    Cr 1000 Bank (Initial direct costs)...£25,000
+```
 
-### 💰 Statement of Financial Position
-- **ROU asset** (cost £942,594 less accumulated depreciation £47,130) = £895,464.  
-- **Lease liability** closing balance = £892,649.  
+### Year 1 — End of First Year
+```text
+Dr 7500 Interest Expense..............£{y1_interest:,.0f}
+Dr 2100 Lease Liability (Principal)...£{y1_principal:,.0f}
+    Cr 1000 Bank (Lease Payment)........£80,000
 
-Both are shown on balance sheet, increasing transparency and gearing ratios.
+Dr 7000 Depreciation Expense..........£{depreciation:,.0f}
+    Cr 1150 Accumulated Depreciation....£{depreciation:,.0f}
+```
 
-### 💸 Statement of Cash Flows
-- **Principal repayment (£24,944)** — Financing activity.  
-- **Interest payment (£55,056)** — either Operating or Financing depending on policy.
+These journals update both the **Profit or Loss** and **Balance Sheet**:
+- P&L records the depreciation and interest expenses.
+- SOFP records the reducing ROU asset and liability.
 
-### 📚 Tax adjustment
-While IFRS 16 depreciation is a **book expense**, it is *not* an allowable deduction for tax.  
-For **taxable profit**, depreciation is replaced with **capital allowances** if applicable, and interest remains deductible as a finance cost.
+### Summary of financial impact
+- **Depreciation**: £47,130 — a non-cash book expense (adjusted back for tax).  
+- **Interest**: £55,056 — treated as a deductible finance cost for tax purposes.  
+- **Principal repayment**: reduces the liability, not an expense.  
 
-### 🚫 Exempt leases
-IFRS 16 allows lessees not to recognise:
-- **Short-term leases** (≤ 12 months), and  
-- **Low-value leases** (e.g., small office equipment).
+### Exemptions under IFRS 16
+- **Short-term leases** (≤ 12 months).  
+- **Low-value assets** (e.g., laptops, printers).  
 
-These continue to be expensed straight to profit or loss.
+These are recognised as **straight expenses** rather than on-balance-sheet items.
         """
     )
 
-    st.markdown("**Example of Year 1 Journals:**")
-    st.code(
-        f"""
-Dr Right-of-use asset                 £942,594
-    Cr Lease liability                          £917,594
-    Cr Cash (initial direct costs)               £25,000
-
-Dr Interest expense                    £{y1_interest:,.0f}
-Dr Lease liability (principal)         £{y1_principal:,.0f}
-    Cr Cash (lease payment)                     £80,000
-
-Dr Depreciation expense                £{depreciation:,.0f}
-    Cr Accumulated depreciation (ROU)          £{depreciation:,.0f}
-        """
-    )
-
-st.success("All stages loaded — from introduction to financial statement impact under IFRS 16.")
+st.success("Use the sidebar menu to navigate each stage of IFRS 16 lease accounting — from introduction to journal-led financial updates.")
