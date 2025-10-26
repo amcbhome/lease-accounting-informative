@@ -58,14 +58,15 @@ df["Principal repaid"] = df["Payment"] - df["Interest (6%)"]
 if menu == "1️⃣ Introduction":
     st.header("1️⃣ Introduction")
     st.markdown(
-        r"""
-Leases allow a business to use assets such as property, machinery, or vehicles **without purchasing them outright**. Under **IFRS 16 – Leases**, most leases are brought **on-balance-sheet**, ensuring greater transparency.
+        """
+Leases allow a business to use assets such as property, machinery, or vehicles **without purchasing them outright**.  
+Under **IFRS 16 – Leases**, most leases are brought **on the balance sheet**, ensuring greater transparency.
 
 Companies must recognise:
 - A **Right-of-Use (ROU) asset** – representing the right to use the asset.  
 - A **Lease liability** – representing the obligation to make lease payments.
 
-This replaces the previous off-balance-sheet treatment under IAS 17. The effect is:
+This replaced the previous off-balance-sheet treatment under IAS 17. The effect is:
 - **Balance Sheet:** records both asset and liability.  
 - **Profit or Loss:** rent expense is replaced by depreciation + interest.  
 - **Cash Flow:** split between interest and principal (usually financing).
@@ -80,7 +81,7 @@ Accounting for leases under IFRS 16 ensures financial statements reflect the **e
 elif menu == "2️⃣ Scenario":
     st.header("2️⃣ Scenario (based on ACCA example)")
     st.markdown(
-        r"""
+        """
 A company leases a property for **20 years**, paying **£80,000 per year in arrears** (end of year).  
 The **incremental borrowing rate** is **6 %**, and the company incurs **£25,000** in initial direct costs.
 
@@ -93,14 +94,10 @@ This example, adapted from the ACCA article *“IFRS 16 Leases”*, demonstrates
 # ──────────────────────────────────────────────────────────────
 elif menu == "3️⃣ Calculating the Present Value":
     st.header("3️⃣ Calculating the Present Value")
+    st.markdown("To measure the **lease liability**, calculate the present value (PV) of the future lease payments discounted at 6%:")
+    st.latex(r"PV = \sum_{t=1}^{20} \frac{80{,}000}{(1.06)^t} = £917{,}594")
     st.markdown(
-        r"""
-To measure the **lease liability**, calculate the **present value (PV)** of the future lease payments, discounted at 6 %:
-
-\[
-PV = \sum_{t=1}^{20} \frac{80{,}000}{(1.06)^t} = £917{,}594
-\]
-
+        """
 Adding **initial direct costs (£25,000)** gives a **Right-of-Use (ROU) asset** of **£942,594**.
 
 💡 *If payments were made at the **start** of each year, the PV would be slightly higher because each payment is discounted for one fewer period.*
@@ -113,8 +110,9 @@ Adding **initial direct costs (£25,000)** gives a **Right-of-Use (ROU) asset** 
 elif menu == "4️⃣ The Payment Schedule":
     st.header("4️⃣ The Payment Schedule")
     st.markdown(
-        r"""
-Each year the lease liability changes as payments are made. The pattern below is based on end-of-year payments (arrears):
+        """
+Each year the lease liability changes as payments are made.  
+This pattern below assumes payments are made at the **end of each year (arrears)**:
 
 - **Interest (6 %)** = Opening × 6 %  
 - **Principal repaid** = Payment − Interest  
@@ -123,13 +121,17 @@ Each year the lease liability changes as payments are made. The pattern below is
 Example: Year 1 interest £55,056 (6 % of £917,594). Payment £80,000 ⇒ principal £24,944 ⇒ closing £892,649.
         """
     )
-    st.dataframe(df.style.format({
-        "Opening liability": "£{:,.0f}",
-        "Interest (6%)": "£{:,.0f}",
-        "Payment": "£{:,.0f}",
-        "Closing liability": "£{:,.0f}",
-        "Principal repaid": "£{:,.0f}",
-    }), use_container_width=True)
+
+    st.dataframe(
+        df.style.format({
+            "Opening liability": "£{:,.0f}",
+            "Interest (6%)": "£{:,.0f}",
+            "Payment": "£{:,.0f}",
+            "Closing liability": "£{:,.0f}",
+            "Principal repaid": "£{:,.0f}",
+        }),
+        use_container_width=True,
+    )
 
 # ──────────────────────────────────────────────────────────────
 # 5. Updating the Financial Statements
@@ -141,7 +143,7 @@ elif menu == "5️⃣ Updating the Financial Statements":
     depreciation = 47_130
 
     st.markdown(
-        r"""
+        """
 Under **IFRS 16**, updates to the accounts are made through **journal entries**, which record transactions in the general ledger using nominal codes.
 
 ### Example of nominal codes:
@@ -158,33 +160,3 @@ Under **IFRS 16**, updates to the accounts are made through **journal entries**,
 Dr 1150 Right-of-Use Asset........£942,594
     Cr 2100 Lease Liability................£917,594
     Cr 1000 Bank (Initial direct costs)...£25,000
-```
-
-### Year 1 — End of First Year
-```text
-Dr 7500 Interest Expense..............£{y1_interest:,.0f}
-Dr 2100 Lease Liability (Principal)...£{y1_principal:,.0f}
-    Cr 1000 Bank (Lease Payment)........£80,000
-
-Dr 7000 Depreciation Expense..........£{depreciation:,.0f}
-    Cr 1150 Accumulated Depreciation....£{depreciation:,.0f}
-```
-
-These journals update both the **Profit or Loss** and **Balance Sheet**:
-- P&L records the depreciation and interest expenses.
-- SOFP records the reducing ROU asset and liability.
-
-### Summary of financial impact
-- **Depreciation**: £47,130 — a non-cash book expense (adjusted back for tax).  
-- **Interest**: £55,056 — treated as a deductible finance cost for tax purposes.  
-- **Principal repayment**: reduces the liability, not an expense.  
-
-### Exemptions under IFRS 16
-- **Short-term leases** (≤ 12 months).  
-- **Low-value assets** (e.g., laptops, printers).  
-
-These are recognised as **straight expenses** rather than on-balance-sheet items.
-        """
-    )
-
-st.success("Use the sidebar menu to navigate each stage of IFRS 16 lease accounting — from introduction to journal-led financial updates.")
