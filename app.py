@@ -94,7 +94,7 @@ This example, adapted from the ACCA article *“IFRS 16 Leases”*, demonstrates
 # ──────────────────────────────────────────────────────────────
 elif menu == "3️⃣ Calculating the Present Value":
     st.header("3️⃣ Calculating the Present Value")
-    st.markdown("To measure the **lease liability**, calculate the present value (PV) of the future lease payments discounted at 6%:")
+    st.markdown("To measure the **lease liability**, calculate the present value (PV) of the future lease payments discounted at 6 %:")
     st.latex(r"PV = \sum_{t=1}^{20} \frac{80{,}000}{(1.06)^t} = £917{,}594")
     st.markdown(
         """
@@ -145,18 +145,64 @@ elif menu == "5️⃣ Updating the Financial Statements":
     st.markdown(
         """
 Under **IFRS 16**, updates to the accounts are made through **journal entries**, which record transactions in the general ledger using nominal codes.
+        """
+    )
 
-### Example of nominal codes:
-| Code | Account Name | Type |
-|------|---------------|------|
-| 1150 | Right-of-Use Asset | Non-current asset |
-| 2100 | Lease Liability | Non-current liability |
-| 7000 | Depreciation Expense | Expense (P&L) |
-| 7500 | Interest Expense | Finance cost (P&L) |
-| 1000 | Bank | Asset |
+    st.subheader("Nominal Codes (Example Chart of Accounts)")
+    st.table({
+        "Code": ["1150", "2100", "7000", "7500", "1000"],
+        "Account Name": [
+            "Right-of-Use Asset",
+            "Lease Liability",
+            "Depreciation Expense",
+            "Interest Expense",
+            "Bank"
+        ],
+        "Type": [
+            "Non-current asset",
+            "Non-current liability",
+            "Expense (P&L)",
+            "Finance cost (P&L)",
+            "Asset"
+        ]
+    })
 
-### Year 0 — Lease Commencement
-```text
-Dr 1150 Right-of-Use Asset........£942,594
-    Cr 2100 Lease Liability................£917,594
-    Cr 1000 Bank (Initial direct costs)...£25,000
+    st.subheader("Year 0 — Lease Commencement")
+    st.code(
+        "Dr 1150 Right-of-Use Asset........£942,594\n"
+        "    Cr 2100 Lease Liability................£917,594\n"
+        "    Cr 1000 Bank (Initial direct costs)...£25,000",
+        language="text"
+    )
+
+    st.subheader("Year 1 — End of First Year")
+    st.code(
+        f"Dr 7500 Interest Expense..............£{y1_interest:,.0f}\n"
+        f"Dr 2100 Lease Liability (Principal)...£{y1_principal:,.0f}\n"
+        f"    Cr 1000 Bank (Lease Payment)........£80,000\n\n"
+        f"Dr 7000 Depreciation Expense..........£{depreciation:,.0f}\n"
+        f"    Cr 1150 Accumulated Depreciation....£{depreciation:,.0f}",
+        language="text"
+    )
+
+    st.markdown(
+        """
+### How the journals update the statements
+- **Profit or Loss:** depreciation and interest recorded as expenses.  
+- **Statement of Financial Position:** ROU asset and liability reduced accordingly.  
+- **Cash Flow Statement:** principal = financing; interest = operating or financing depending on policy.
+
+### IFRS 16 and Tax Treatment
+- Depreciation is a **book expense** only — replaced with **capital allowances** for tax purposes.  
+- Interest remains **deductible** as a finance cost.  
+
+### Exempt Leases under IFRS 16
+- **Short-term leases (≤ 12 months)**  
+- **Low-value assets (e.g., laptops, printers)**  
+
+These are expensed directly to Profit or Loss.
+        """
+    )
+
+st.success("Use the sidebar menu to navigate each stage of IFRS 16 lease accounting — from introduction to journal-led financial updates.")
+
